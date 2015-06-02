@@ -23,6 +23,10 @@ class TestStacksAndQueues(unittest.TestCase):
         test_stack.push(-2)
         self.assertEqual(test_stack, Stack([0, -2]))
 
+    def test_sort_stack(self):
+        result = Stack([5,4,3,2,1])
+        self.assertEqual(sort_stack(self.stack), result)
+
     def test_stack_min(self):
         self.assertEqual(self.stack.min(), 1)
         self.stack.push(-2)
@@ -46,9 +50,24 @@ class TestStacksAndQueues(unittest.TestCase):
 
     def test_set_of_stacks(self):
         sos = SetOfStacks(10)
-        for x in range(1,6):
+        for x in range(1, 6):
             sos.push(x)
         self.stacktest(sos)
+
+    def test_set_of_stacks_popat(self):
+        sos = SetOfStacks(3)
+        for x in range(9):
+            sos.push(x)
+        self.assertEqual(sos.pop(), 8)
+        self.assertEqual(sos.pop(at=1), 5) # skip to the middle stack
+        self.assertEqual(sos.pop(), 7)
+        self.assertEqual(sos.pop(), 6)
+        self.assertEqual(sos.pop(), 4) # top stack empty, mid stack should now return and we already popped first
+        self.assertEqual(sos.pop(at=0), 2) # kill off the bottom stack
+        self.assertEqual(sos.pop(at=0), 1)
+        self.assertEqual(sos.pop(at=0), 0)
+        self.assertEqual(sos.pop(), 3) # pop as normal
+        self.assertEqual(sos.pop(), None) # bottom stack should be empty
 
     def test_queue(self):
         self.assertEqual(self.queue.dequeue(), 'a')
@@ -62,6 +81,13 @@ class TestStacksAndQueues(unittest.TestCase):
         self.queue.enqueue('f')
         self.queue.enqueue('g')
         self.assertEqual(self.queue, Queue(['f', 'g']))
+
+    def test_myqueue(self):
+        mq = MyQueue(['a', 'b', 'c', 'd', 'e'])
+        self.assertEqual(mq.dequeue(), 'a')
+        self.assertEqual(mq.dequeue(), 'b')
+        self.assertEqual(mq.dequeue(), 'c')
+        self.assertEqual(mq, MyQueue(['d', 'e']))
 
     def test_array_stack(self):
         astack = ArrayStack(stack_size=3)
