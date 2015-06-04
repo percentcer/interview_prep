@@ -1,5 +1,8 @@
-from logic.linked_lists import Node
+__author__ = 'percentcer'
+# Chapter 4
+# Stacks and Queues
 
+from logic.linked_lists import Node
 
 class CommonStack(object):
     def __init__(self):

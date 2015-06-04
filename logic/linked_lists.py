@@ -1,3 +1,4 @@
+__author__ = 'percentcer'
 # Chapter 2
 # Linked Lists
 
