@@ -4,21 +4,17 @@ from logic.stacks import *
 
 class TestStacksAndQueues(unittest.TestCase):
     def setUp(self):
-        self.stack = Stack([1,2,3,4,5])
+        self.stack = Stack([1, 2, 3, 4, 5])
         self.queue = Queue(['a', 'b', 'c', 'd', 'e'])
 
     def tearDown(self):
         pass
 
     def stacktest(self, test_stack):
-        self.assertEqual(test_stack.pop(), 5)
-        self.assertEqual(test_stack.pop(), 4)
-        self.assertEqual(test_stack.pop(), 3)
-        self.assertEqual(test_stack, Stack([1,2]))
-        self.assertEqual(test_stack.pop(), 2)
-        self.assertEqual(test_stack.pop(), 1)
-        self.assertEqual(test_stack.pop(), None)
-        self.assertEqual(test_stack.pop(), None)
+        desired = [5, 4, 3, 2, 1, None, None]
+        for d in desired:
+            self.assertEqual(d, test_stack.pop())
+
         test_stack.push(0)
         test_stack.push(-2)
         self.assertEqual(test_stack, Stack([0, -2]))
@@ -116,3 +112,8 @@ class TestStacksAndQueues(unittest.TestCase):
         astack.push(2, "l")
         self.assertRaises(ValueError, astack.push, 2, "l")
         self.assertRaises(IndexError, astack.push, 3, "x")
+
+    def test_pour(self):
+        empty = Stack()
+        pour(self.stack, empty)
+        self.assertEqual(empty, Stack([5, 4, 3, 2, 1]))

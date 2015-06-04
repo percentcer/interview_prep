@@ -305,7 +305,6 @@ def hanoi():
 
     move_stack(s0, s1, s2, len(s0), printer)
 
-
 def pour(from_stack, to_stack):
     for _ in range(len(from_stack)):
         to_stack.push(from_stack.pop())
@@ -330,6 +329,8 @@ def sort_stack(stack):
     large = sort_stack(sgt)
     large.push(head)
 
-    pour(small, tmp) # reverse small
-    pour(tmp, large) # combine
+    # reverse small
+    pour(small, tmp)
+    # combine
+    pour(tmp, large)
     return large
