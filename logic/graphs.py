@@ -11,13 +11,13 @@ class TreeNode(object):
         self._data = data
 
     def __eq__(self, other):
-        return self._data == other.data and self._children == other.children
+        return self._data == other.data and self.children == other.children
 
     def add_child(self, other):
         self._children.append(other)
 
     def is_leaf(self):
-        return not len(self._children)
+        return not any(self._children)
 
     @property
     def children(self):
@@ -33,8 +33,18 @@ class BinaryTreeNode(TreeNode):
         super().__init__(data)
         self._children = [None, None]
 
+    def __eq__(self, other):
+        if not isinstance(other, BinaryTreeNode):
+            return super().__eq__(other)
+        else:
+            return self._children == other._children
+
     def add_child(self, other):
-        raise NotSupportedError("Please use add_left or add_right for BinaryTreeNode")
+        raise NotSupportedError("Please use left or right for BinaryTreeNode")
+
+    @property
+    def children(self):
+        return [c for c in self._children if c is not None]
 
     @property
     def right(self):
@@ -61,7 +71,7 @@ def node_cons(obj):
     return ret
 
 def binary_tree_constructor(rep):
-    if rep is None:
+    if rep is None or rep is ():
         return None
 
     data, left, right = rep
@@ -70,6 +80,16 @@ def binary_tree_constructor(rep):
     ret.left = binary_tree_constructor(left)
     ret.right = binary_tree_constructor(right)
 
+    return ret
+
+def tree_constructor(rep):
+    if rep is None or rep is ():
+        return None
+
+    data, children = rep
+    ret = TreeNode(data)
+    for c in children:
+        ret.add_child(tree_constructor(c))
     return ret
 
 def in_order(root):
@@ -117,3 +137,20 @@ def post_order(root):
     ret.append(root.data)
 
     return ret
+
+def depth_of_leaves(root, n=0):
+    if root is None:
+        return []
+    elif root.is_leaf():
+        return [n]
+
+    ret = []
+    for c in root.children:
+        ret.extend(depth_of_leaves(c, n+1))
+    return ret
+
+def is_balanced(root):
+    if root is None:
+        return True
+    dleaves = depth_of_leaves(root)
+    return max(dleaves) - min(dleaves) <= 1
