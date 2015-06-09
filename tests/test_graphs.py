@@ -125,3 +125,16 @@ class TestGraphs(unittest.TestCase):
         self.assertEqual(common_ancestor(_16, _37), _37)
         self.assertEqual(common_ancestor(_37, _37), _37)
         self.assertEqual(common_ancestor(_50, _67), _58)
+
+    def test_is_subtree(self):
+        big = make_tree_from_sorted(range(10000))
+        known_subtree = binary_tree_constructor(
+            (3795, (3793, (3792, (), ()), (3794, (), ())), (3798, (3797, (), ()), (3799, (), ())))
+        )
+        known_false_subtree = binary_tree_constructor(
+            (40000, (34, (), ()), (2233, (), ()))
+        )
+        self.assertTrue(is_subtree(known_subtree, big))
+        self.assertTrue(is_subtree(self.empty_tree, big))
+        self.assertFalse(is_subtree(known_false_subtree, big))
+        self.assertFalse(is_subtree(known_subtree, self.empty_tree))

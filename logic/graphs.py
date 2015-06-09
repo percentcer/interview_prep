@@ -9,6 +9,21 @@ class NotSupportedError(Exception):
     pass
 
 class TreeNode(object):
+
+    @staticmethod
+    def node_printer(node, prefix, is_tail):
+        lines = []
+        lines.append("{}{}{}".format(
+            prefix,
+            "└── " if is_tail else "├── ",
+            "" if node.data is None else node.data))
+
+        for c in list(reversed(node.children))[:-1]:
+            lines.extend(TreeNode.node_printer(c, prefix + ("    " if is_tail else "│   "), False))
+        if len(node.children):
+            lines.extend(TreeNode.node_printer(node.children[0], prefix + ("    " if is_tail else "│   "), True))
+        return lines
+
     def __init__(self, data):
         self._children = []
         self._data = data
@@ -19,6 +34,12 @@ class TreeNode(object):
             return False
 
         return self._data == other.data and self.children == other.children
+
+    def __str__(self):
+        return '\n'.join(self.node_printer(self, "", True))
+
+    def __repr__(self):
+        return str(self)
 
     def add_child(self, other):
         self._children.append(other)
@@ -59,12 +80,6 @@ class BinaryTreeNode(TreeNode):
             return super().__eq__(other)
         else:
             return self._children == other._children
-
-    def __str__(self):
-        return "{} ({}, {})".format(self.data, self.left, self.right)
-
-    def __repr__(self):
-        return str(self)
 
     def __lt__(self, other):
         return self.data < other.data
@@ -297,3 +312,25 @@ def common_ancestor(left, right):
             left = left.parent
         if right.parent:
             right = right.parent
+
+def is_subtree(tsub, tlarge):
+    if tsub is None:
+        return True
+    elif tlarge is None:
+        return False
+
+    def check(possible, sub):
+        if possible.data != sub.data:
+            return False
+
+        left_side = check(possible.left, sub.left) if sub.left else True
+        right_side = check(possible.right, sub.right) if sub.right else True
+
+        return left_side and right_side
+
+    for node in tlarge:
+        if node.data == tsub.data:
+            if check(node, tsub):
+                return True
+    else:
+        return False
